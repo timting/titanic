@@ -1,0 +1,11 @@
+passenger class 0-2
+gender 0-1
+age -1,0-80
+sibsp (siblings & spouses) 0-8
+parch (parents & children) 0-6
+far 0-51300
+embarked 0-2
+ticket number type 0-1
+honorific title (Mr, Ms) 0-15
+
+using mean normalization

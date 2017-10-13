@@ -1,11 +1,35 @@
 passenger class 0-2
 gender 0-1
+0: male
+1: female
 age -1,0-80
 sibsp (siblings & spouses) 0-8
 parch (parents & children) 0-6
-far 0-51300
+fare 0-51300
 embarked 0-2
+0: C (Cherbourg)
+1: Q (Queenstown)
+2: S (Southampton)
 ticket number type 0-1
+0: Alphanumeric
+1: Numeric
 honorific title (Mr, Ms) 0-15
+    'Miss.': 0,
+    'Mme.': 1,
+    'Rev.': 2,
+    'Jonkheer.': 3,
+    'Sir.': 4,
+    'Mlle.': 5,
+    'Mrs.': 6,
+    'Capt.': 7,
+    'Col.': 8,
+    'Ms.': 9,
+    'Mr.': 10,
+    'Lady.': 11,
+    'Dr.': 12,
+    'the': 13,
+    'Master.': 14,
+    'Major.': 15,
+    'Don.': 16
 
 using mean normalization

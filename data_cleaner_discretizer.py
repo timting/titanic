@@ -51,18 +51,26 @@ def honorific(name):
     title, first_names = rest_of_name.split(' ', 1)
     return titles[title]
 
+conversions = {
+    "Sex":       [ "Sex",      lambda x: 0 if x == "male" else 1 ],
+    "Ticket":    [ "Ticket",   lambda x: 0 if re.match("[A-Za-z]", x) else 1 ],
+    "Age":       [ "Age",      lambda x: -1 if x == pd.np.nan else x ],
+    "Fare":      [ "Fare",     lambda x: int(x * 100) ],
+    "Embarked":  [ "Embarked", convert_embarked_to_int ],
+    "Honorific": [ "Name",     honorific ]
+}
+
 # Any results you write to the current directory are saved as output.
 input = pd.read_csv("train.csv")
 print("SIZE: %d %d" % input.shape)
 
 input.drop(["PassengerId"], axis=1)
-input["Sex"] = input["Sex"].apply(lambda x: 0 if x == "male" else 1)
 
-input["Ticket"] = input["Ticket"].apply(lambda x: 0 if re.match("[A-Za-z]", x) else 1)
-input["Age"] = input["Age"].fillna(-1)
-input["Fare"] = input["Fare"].apply(lambda x: int(x * 100))
-input["New Embarked"] = input["Embarked"].apply(convert_embarked_to_int)
-input["Honorific"] = input["Name"].apply(honorific)
+for key,val in conversions.items():
+    src_key    = val[0]
+    conversion = val[1]
+    input[key] = input[src_key].apply(conversion)
+
 print(input[0:10])
 # titles = {}
 

@@ -5,6 +5,7 @@
 # https://github.com/kaggle/docker-python For example, here's several
 # helpful packages to load in
 
+import math
 import numpy as np # linear algebra
 import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
 import re
@@ -54,7 +55,7 @@ def honorific(name):
 conversions = {
     "Sex":       [ "Sex",      lambda x: 0 if x == "male" else 1 ],
     "Ticket":    [ "Ticket",   lambda x: 0 if re.match("[A-Za-z]", x) else 1 ],
-    "Age":       [ "Age",      lambda x: -1 if x == pd.np.nan else x ],
+    "Age":       [ "Age",      lambda x: -1 if math.isnan(x) else x ],
     "Fare":      [ "Fare",     lambda x: int(x * 100) ],
     "Embarked":  [ "Embarked", convert_embarked_to_int ],
     "Honorific": [ "Name",     honorific ]
@@ -72,10 +73,3 @@ for key,val in conversions.items():
     input[key] = input[src_key].apply(conversion)
 
 print(input[0:10])
-# titles = {}
-
-
-
-# for title, title_count in titles.items():
-#     print("%s: %d" % (title, title_count))
-

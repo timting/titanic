@@ -63,13 +63,27 @@ conversions = {
 
 # Any results you write to the current directory are saved as output.
 input = pd.read_csv("train.csv")
-print("SIZE: %d %d" % input.shape)
-
-input.drop(["PassengerId"], axis=1)
 
 for key,val in conversions.items():
     src_key    = val[0]
     conversion = val[1]
     input[key] = input[src_key].apply(conversion)
 
+def mean_normalize(data, column_name, size):
+    column = data[column_name]
+
+    col_max = column.max(1)
+    col_min = column.min(1)
+    col_mean = column.mean(1)
+
+    divisor = col_max - col_min
+    data[column_name] = column.apply(lambda x: (x - col_mean)/divisor)
+
+length = input.shape[0]
+for norm_col in ["Pclass", "Age", "SibSp", "Parch", "Fare", "Honorific"]:
+    mean_normalize(input, norm_col, length)
+
+input = input.drop(["PassengerId", "Cabin", "Name"], 1)
+
 print(input[0:10])
+input.to_csv("normalized-train.csv", index=False)

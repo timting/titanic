@@ -5,6 +5,7 @@
 # https://github.com/kaggle/docker-python For example, here's several
 # helpful packages to load in
 
+import math
 import numpy as np # linear algebra
 import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
 import re
@@ -54,7 +55,7 @@ def honorific(name):
 conversions = {
     "Sex":       [ "Sex",      lambda x: 0 if x == "male" else 1 ],
     "Ticket":    [ "Ticket",   lambda x: 0 if re.match("[A-Za-z]", x) else 1 ],
-    "Age":       [ "Age",      lambda x: -1 if x == pd.np.nan else x ],
+    "Age":       [ "Age",      lambda x: -1 if math.isnan(x) else x ],
     "Fare":      [ "Fare",     lambda x: int(x * 100) ],
     "Embarked":  [ "Embarked", convert_embarked_to_int ],
     "Honorific": [ "Name",     honorific ]
@@ -62,20 +63,27 @@ conversions = {
 
 # Any results you write to the current directory are saved as output.
 input = pd.read_csv("train.csv")
-print("SIZE: %d %d" % input.shape)
-
-input.drop(["PassengerId"], axis=1)
 
 for key,val in conversions.items():
     src_key    = val[0]
     conversion = val[1]
     input[key] = input[src_key].apply(conversion)
 
+def mean_normalize(data, column_name, size):
+    column = data[column_name]
+
+    col_max = column.max(1)
+    col_min = column.min(1)
+    col_mean = column.mean(1)
+
+    divisor = col_max - col_min
+    data[column_name] = column.apply(lambda x: (x - col_mean)/divisor)
+
+length = input.shape[0]
+for norm_col in ["Pclass", "Age", "SibSp", "Parch", "Fare", "Honorific"]:
+    mean_normalize(input, norm_col, length)
+
+input = input.drop(["PassengerId", "Cabin", "Name"], 1)
+
 print(input[0:10])
-# titles = {}
-
-
-
-# for title, title_count in titles.items():
-#     print("%s: %d" % (title, title_count))
-
+input.to_csv("normalized-train.csv", index=False)

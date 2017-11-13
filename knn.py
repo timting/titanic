@@ -27,8 +27,8 @@ def nearest_neighbors(data, point, labels, k):
     return sorted_labels[0][0]
 
 def main():
-    data,labels = titanic.read_data("normalized-train.csv")
-    test,test_labels = titanic.read_data("normalized-test.csv")
+    data,labels,_ = titanic.read_data("normalized-train.csv")
+    test,test_labels,_ = titanic.read_data("normalized-test.csv")
 
     successes = 0
     totals = 0
